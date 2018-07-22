@@ -1,7 +1,8 @@
 let https = require('https'),
     http = require('http'),
     key = '92MATWF1J2BWRPNAHTDI6R5HQVUUBW7R51',
-    address;
+    address,
+    fxRate = 0.00609; // VIT/USD
 
 for (let i = 0; i < process.argv.length; i++) {
     if (process.argv[i] == '-to-address') {
@@ -34,7 +35,7 @@ function step2(data) {
             contractAddress = d.contractAddress,
             to = d.to,
             value = d.value,
-            tokenName = d.tokenSymbol;
+            tokenSymbol = d.tokenSymbol;
 
         https.get(
             'https://api.etherscan.io/api?module=account&action=tokenbalance&contractAddress=' + contractAddress + '&address=' + to + '&tag=latest&apikey=' + key,
@@ -45,11 +46,13 @@ function step2(data) {
                 });
                 resp.on('end', () => {
                     let v = JSON.parse(dataStr);
+                    value = tokenSymbol == 'VIT' ? v.result * fxRate : v.result;
+                    value = value ? Math.round(value / 10000000000000000) / 100 : 0;
                     console.info(
                         '\tStatus: ', v.status != '0' ? 'Success' : 'Error',
                         '\n\tFrom: ', contractAddress,
                         '\n\tTo: ', to,
-                        '\n\tFor: ', v.result ? v.result/1000000000000000000 : 0, tokenName,
+                        '\n\tFor: ', v.result ? Math.round(v.result/10000000000000000) / 100 : 0, (tokenSymbol == 'VIT' ? '($' + value + ')' : ''), tokenSymbol,
                         '\n_________________________________________________________');
 
                     data.splice(0, 1);
