@@ -35,7 +35,7 @@ function step2(data) {
             to = d.to,
             value = d.value,
             tokenName = d.tokenName;
-        // if(to != '0x0C631014cEf643D5AB274aF449a0F2317d879D99') return;
+
         https.get(
             'https://api.etherscan.io/api?module=account&action=tokenbalance&contractAddress=' + contractAddress + '&address=' + to + '&tag=latest&apikey=' + key,
             (resp) => {
