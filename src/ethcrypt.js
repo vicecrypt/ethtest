@@ -34,7 +34,7 @@ function step2(data) {
             contractAddress = d.contractAddress,
             to = d.to,
             value = d.value,
-            tokenName = d.tokenName;
+            tokenName = d.tokenSymbol;
 
         https.get(
             'https://api.etherscan.io/api?module=account&action=tokenbalance&contractAddress=' + contractAddress + '&address=' + to + '&tag=latest&apikey=' + key,
@@ -46,7 +46,7 @@ function step2(data) {
                 resp.on('end', () => {
                     let v = JSON.parse(dataStr);
                     console.info(
-                        '\tStatus: ', v.status ? 'Success' : 'Error',
+                        '\tStatus: ', v.status != '0' ? 'Success' : 'Error',
                         '\n\tFrom: ', contractAddress,
                         '\n\tTo: ', to,
                         '\n\tFor: ', v.result ? v.result/1000000000000000000 : 0, tokenName,
