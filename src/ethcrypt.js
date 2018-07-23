@@ -16,7 +16,19 @@ if (!address) {
     return -1;
 }
 
-http.get('http://api.etherscan.io/api?module=account&action=tokentx&address=' + address + '&sort=asc&apikey=' + key, h2);
+https.get('https://min-api.cryptocompare.com/data/price?fsym=VIT&tsyms=USD', function(resp) {
+    let dataStr = '';
+    resp.on('data', (d) => {
+        dataStr += d;
+    });
+    resp.on('end', () => {
+        let rate = JSON.parse(dataStr);
+        fxRate = rate.USD;
+        console.info('FxRates: ', rate.USD);
+        http.get('http://api.etherscan.io/api?module=account&action=tokentx&address=' + address + '&sort=asc&apikey=' + key, h2);
+    });
+});
+
 
 function h2(incomingResp) {
     let body = '';
