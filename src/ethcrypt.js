@@ -2,7 +2,7 @@ let https = require('https'),
     http = require('http'),
     key = '92MATWF1J2BWRPNAHTDI6R5HQVUUBW7R51',
     address,
-    fxRate = 0.00609; // VIT/USD
+    fxRate; // VIT/USD
 
 for (let i = 0; i < process.argv.length; i++) {
     if (process.argv[i] == '-to-address') {
